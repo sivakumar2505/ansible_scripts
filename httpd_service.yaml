@@ -13,7 +13,7 @@
         name: apache2
         state: present
 
-    - name: Install additional utilities
+    - name: Install additional utilities (example: curl, git)
       apt:
         name:
           - curl
@@ -26,11 +26,13 @@
         - Restart Apache
 
     - name: Create a self-signed SSL certificate for testing
-      community.crypto.openssl_certificate:
-        path: /etc/ssl/certs/apache-selfsigned.crt
-        privatekey_path: /etc/ssl/private/apache-selfsigned.key
-        csr_common_name: "localhost"
-        provider: selfsigned
+      shell: |
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout /etc/ssl/private/apache-selfsigned.key \
+        -out /etc/ssl/certs/apache-selfsigned.crt \
+        -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=localhost"
+      args:
+        creates: /etc/ssl/certs/apache-selfsigned.crt
 
     - name: Configure Apache to use SSL
       copy:
@@ -68,4 +70,10 @@
       systemd:
         name: apache2
         state: started
-        enabled:
+        enabled: true
+
+  handlers:
+    - name: Restart Apache
+      systemd:
+        name: apache2
+        state: restarted
