@@ -1,5 +1,5 @@
 ---
-- name: Setup HTTPS Web Server and Additional Services on Ubuntu
+- name: Install HTTP Service (Apache) on Ubuntu
   hosts: all
   become: true
   tasks:
@@ -13,58 +13,15 @@
         name: apache2
         state: present
 
-    - name: Install additional utilities (example: curl, git)
-      apt:
-        name:
-          - curl
-          - git
-        state: present
-
-    - name: Enable Apache2 SSL module
-      command: a2enmod ssl
+    - name: Enable Apache2 HTTP module
+      command: a2enmod rewrite
       notify:
         - Restart Apache
 
-    - name: Create a self-signed SSL certificate for testing
-      shell: |
-        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout /etc/ssl/private/apache-selfsigned.key \
-        -out /etc/ssl/certs/apache-selfsigned.crt \
-        -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=localhost"
-      args:
-        creates: /etc/ssl/certs/apache-selfsigned.crt
-
-    - name: Configure Apache to use SSL
+    - name: Create a default web page
       copy:
-        dest: /etc/apache2/sites-available/default-ssl.conf
-        content: |
-          <IfModule mod_ssl.c>
-              <VirtualHost _default_:443>
-                  ServerAdmin webmaster@localhost
-                  DocumentRoot /var/www/html
-
-                  ErrorLog ${APACHE_LOG_DIR}/error.log
-                  CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-                  SSLEngine on
-                  SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
-                  SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
-
-                  <FilesMatch "\.(cgi|shtml|phtml|php)$">
-                      SSLOptions +StdEnvVars
-                  </FilesMatch>
-                  <Directory /usr/lib/cgi-bin>
-                      SSLOptions +StdEnvVars
-                  </Directory>
-              </VirtualHost>
-          </IfModule>
-      notify:
-        - Restart Apache
-
-    - name: Enable default SSL site
-      command: a2ensite default-ssl
-      notify:
-        - Restart Apache
+        dest: /var/www/html/index.html
+        content: "<html><body><h1>Welcome to Apache on Ubuntu!</h1></body></html>"
 
     - name: Start and enable Apache2 service
       systemd:
