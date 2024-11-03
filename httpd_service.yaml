@@ -13,7 +13,7 @@
         name: apache2
         state: present
 
-    - name: Install additional utilities
+    - name: Install additional utilities (example: curl, git)
       apt:
         name:
           - curl
@@ -26,7 +26,7 @@
         - Restart Apache
 
     - name: Create a self-signed SSL certificate for testing
-      openssl_certificate:
+      community.crypto.openssl_certificate:
         path: /etc/ssl/certs/apache-selfsigned.crt
         privatekey_path: /etc/ssl/private/apache-selfsigned.key
         csr_common_name: "localhost"
@@ -68,10 +68,4 @@
       systemd:
         name: apache2
         state: started
-        enabled: true
-
-  handlers:
-    - name: Restart Apache
-      systemd:
-        name: apache2
-        state: restarted
+        enabled:
