@@ -1,6 +1,6 @@
 ---
 - name: Run tasks with user prompt on failure
-  hosts: target_host
+  host: localhost
   gather_facts: no
 
   vars:
