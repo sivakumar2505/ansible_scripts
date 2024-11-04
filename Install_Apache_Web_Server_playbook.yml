@@ -1,0 +1,17 @@
+---
+- name: Install Apache HTTP Server
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+    - name: Ensure Apache is enabled
+      service:
+        name: apache2
+        enabled: true
+    - name: Ensure Apache is started
+      service:
+        name: apache2
+        state: started
