@@ -38,6 +38,6 @@
             msg: "Exceeded maximum attempts. Authentication failed."
           when: attempt > max_attempts
 
-      until: not command_result.failed or attempt > max_attempts
-      retries: "{{ max_attempts }}"
-      delay: 0
+     # until: not command_result.failed or attempt > max_attempts
+      #retries: "{{ max_attempts }}"
+      #delay: 0
