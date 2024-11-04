@@ -3,23 +3,19 @@
 - name: Install Apache Web Server
   hosts: all
   become: true
-
+  
   tasks:
     - name: Install Apache HTTP server
       apt:
         name: apache2
         state: present
-      register: apache_installed
-
+        
     - name: Ensure Apache is enabled
-      systemd:
+      service:
         name: apache2
-        enabled: yes
-        state: started
-      when: apache_installed.changed
-
-    - name: Start Apache
+        enabled: true
+        
+    - name: Start Apache service
       service:
         name: apache2
         state: started
-      when: apache_installed.changed
