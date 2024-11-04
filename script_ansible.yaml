@@ -1,10 +1,11 @@
 ---
-- name: Task that requires password authentication
+- name: Task that requires password authentication with retries
   hosts: localhost
   gather_facts: no
   vars:
-    password: "initial_password"  # Initial password (you can leave it blank if desired)
+    password: "initial_password"  # Initial password
     max_attempts: 3               # Maximum number of attempts to ask for a password
+    attempt: 1                    # Track the current attempt number
 
   tasks:
     - name: Attempt a password-protected command
@@ -13,11 +14,36 @@
       failed_when: "'Authentication failed' in command_result.stderr"
       ignore_errors: yes
 
-    - name: Prompt for password and retry command if the initial attempt failed
-      pause:
-        prompt: "The password is incorrect. Please enter the correct password:"
-      register: user_input
+    - name: Retry logic for password prompt if command fails
+      block:
+        - name: Check if maximum attempts have been reached
+          fail:
+            msg: "Exceeded maximum attempts. Authentication failed."
+          when: attempt > max_attempts
+
+        - name: Prompt for password if the command failed
+          pause:
+            prompt: "The password is incorrect. Please enter the correct password:"
+          register: user_input
+          when: command_result.failed
+
+        - name: Set new password from user input
+          set_fact:
+            password: "{{ user_input.user_input }}"
+          when: command_result.failed
+
+        - name: Retry the password-protected command with new password
+          command: "echo 'Simulated password-protected command with new password'"
+          register: command_result
+          failed_when: "'Authentication failed' in command_result.stderr"
+          ignore_errors: yes
+
+        - name: Increment attempt count
+          set_fact:
+            attempt: "{{ attempt + 1 }}"
+          when: command_result.failed
+
       when: command_result.failed
-      until: not command_result.failed or (user_input.retries | int) >= max_attempts
+      retry_until: not command_result.failed
       retries: "{{ max_attempts }}"
-      delay:
+      delay: 0
