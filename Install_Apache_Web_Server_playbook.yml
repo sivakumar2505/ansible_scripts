@@ -1,22 +1,17 @@
-
 ---
-- name: Install Apache Web Server
+- name: Install Apache HTTP Server
   hosts: all
   become: yes
+
   tasks:
-    - name: Install Apache HTTP server
-      apt:
-        name: apache2
-        update_cache: yes
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
-    
+    - name: Update apt cache
+      apt: update_cache=yes cache_valid_time=3600
+
+    - name: Install Apache HTTP Server
+      apt: name=apache2 state=present
+
     - name: Ensure Apache is enabled
-      service:
-        name: apache2
-        enabled: yes
-    
-    - name: Start Apache service
-      service:
-        name: apache2
-        state: started
+      service: name=apache2 enabled=yes
+
+    - name: Start Apache
+      service: name=apache2 state=started
