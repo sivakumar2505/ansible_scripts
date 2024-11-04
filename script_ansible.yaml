@@ -4,46 +4,40 @@
   gather_facts: no
   vars:
     password: "initial_password"  # Initial password
-    max_attempts: 3               # Maximum number of attempts to ask for a password
-    attempt: 1                    # Track the current attempt number
+    max_attempts: 3               # Maximum number of attempts
+    attempt: 1                    # Track the current attempt count
 
   tasks:
-    - name: Attempt a password-protected command
-      command: "echo 'Simulated password-protected command'"
-      register: command_result
-      failed_when: "'Authentication failed' in command_result.stderr"
-      ignore_errors: yes
-
-    - name: Retry logic for password prompt if command fails
+    - name: Attempt password-protected command
       block:
-        - name: Check if maximum attempts have been reached
-          fail:
-            msg: "Exceeded maximum attempts. Authentication failed."
-          when: attempt > max_attempts
+        - name: Run password-protected command
+          command: "echo 'Simulated password-protected command with password: {{ password }}'"
+          register: command_result
+          failed_when: "'Authentication failed' in command_result.stderr"
+          ignore_errors: yes
 
-        - name: Prompt for password if the command failed
+        - name: Check if command failed and prompt for new password
           pause:
             prompt: "The password is incorrect. Please enter the correct password:"
           register: user_input
           when: command_result.failed
 
-        - name: Set new password from user input
+        - name: Update password from user input
           set_fact:
             password: "{{ user_input.user_input }}"
           when: command_result.failed
 
-        - name: Retry the password-protected command with new password
-          command: "echo 'Simulated password-protected command with new password'"
-          register: command_result
-          failed_when: "'Authentication failed' in command_result.stderr"
-          ignore_errors: yes
-
-        - name: Increment attempt count
+        - name: Increment attempt counter
           set_fact:
             attempt: "{{ attempt + 1 }}"
           when: command_result.failed
 
-      when: command_result.failed
-      retry_until: not command_result.failed
+      rescue:
+        - name: Fail if maximum attempts reached
+          fail:
+            msg: "Exceeded maximum attempts. Authentication failed."
+          when: attempt > max_attempts
+
+      until: not command_result.failed or attempt > max_attempts
       retries: "{{ max_attempts }}"
       delay: 0
