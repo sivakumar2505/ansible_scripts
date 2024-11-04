@@ -1,0 +1,55 @@
+---
+- name: Run tasks with user prompt on failure
+  hosts: target_host
+  gather_facts: no
+
+  vars:
+    continue_on_failure: true  # Default variable to control task continuation on failures
+
+  tasks:
+    - name: Task 1 - Run some command
+      command: "some_command_1"
+      register: result
+      failed_when: result.rc != 0
+      when: continue_on_failure
+    - name: Check Task 1 result and prompt if failed
+      pause:
+        prompt: "Task 1 failed. Do you want to continue? (yes/no)"
+      when: result.failed and continue_on_failure
+      register: user_input_1
+    - name: Set continue_on_failure based on Task 1 input
+      set_fact:
+        continue_on_failure: "{{ user_input_1.user_input == 'yes' }}"
+      when: result.failed and continue_on_failure
+
+    - name: Task 2 - Run another command
+      command: "some_command_2"
+      register: result
+      failed_when: result.rc != 0
+      when: continue_on_failure
+    - name: Check Task 2 result and prompt if failed
+      pause:
+        prompt: "Task 2 failed. Do you want to continue? (yes/no)"
+      when: result.failed and continue_on_failure
+      register: user_input_2
+    - name: Set continue_on_failure based on Task 2 input
+      set_fact:
+        continue_on_failure: "{{ user_input_2.user_input == 'yes' }}"
+      when: result.failed and continue_on_failure
+
+    - name: Task 3 - Run another command
+      command: "some_command_3"
+      register: result
+      failed_when: result.rc != 0
+      when: continue_on_failure
+    - name: Check Task 3 result and prompt if failed
+      pause:
+        prompt: "Task 3 failed. Do you want to continue? (yes/no)"
+      when: result.failed and continue_on_failure
+      register: user_input_3
+    - name: Set continue_on_failure based on Task 3 input
+      set_fact:
+        continue_on_failure: "{{ user_input_3.user_input == 'yes' }}"
+      when: result.failed and continue_on_failure
+
+    # Add more tasks as needed following the same pattern.
