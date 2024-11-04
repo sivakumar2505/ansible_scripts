@@ -1,27 +1,19 @@
 
 ---
-- name: Update and Upgrade System Packages
+- name: Update system packages and perform system upgrade
   hosts: all
-  become: true
+  become: yes
+  
   tasks:
-    - name: Update system packages
-      apt:
-        update_cache: yes
-      when: ansible_os_family == "Debian"
+  - name: Update system packages
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      state: latest
       
-    - name: Update system packages
-      yum:
-        name: '*'
-        state: latest
-      when: ansible_os_family == "RedHat"
-      
-    - name: Perform system upgrade
-      apt:
-        upgrade: yes
-      when: ansible_os_family == "Debian"
-      
-    - name: Perform system upgrade
-      yum:
-        name: '*'
-        state: latest
-      when: ansible_os_family == "RedHat"
+  - name: Perform system upgrade
+    apt:
+      upgrade: dist
+      force_apt_get: yes
+      autoremove: yes
+      autoclean: yes
