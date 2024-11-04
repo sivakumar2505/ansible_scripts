@@ -13,17 +13,26 @@
       failed_when: "'Authentication failed' in command_result.stderr"
       ignore_errors: yes
 
-    - name: Prompt for password if the initial attempt failed
-      pause:
-        prompt: "The password is incorrect. Please enter the correct password:"
-      register: user_input
+    - name: Retry command with new password if initial attempt failed
+      block:
+        - name: Prompt for password if the command failed
+          pause:
+            prompt: "The password is incorrect. Please enter the correct password:"
+          register: user_input
+
+        - name: Set new password
+          set_fact:
+            password: "{{ user_input.user_input }}"
+
+        - name: Attempt the password-protected command with new password
+          command: "echo 'Simulated password-protected command with new password'"
+          register: command_result
+          failed_when: "'Authentication failed' in command_result.stderr"
+          ignore_errors: yes
       when: command_result.failed
       loop: "{{ range(1, max_attempts) | list }}"
-      until: not command_result.failed
-      retries: "{{ max_attempts }}"
-      delay: 0
-
-      # This sets the password variable to the user's new input
-      set_fact:
-        password: "{{ user_input.user_input }}"
+      rescue:
+        - name: Fail if maximum attempts reached
+          fail:
+            msg: "Exceeded maximum attempts. Authentication failed."
       when: command_result.failed
