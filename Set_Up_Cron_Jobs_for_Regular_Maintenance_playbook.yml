@@ -1,0 +1,27 @@
+
+---
+- name: Set Up Cron Jobs for Regular Maintenance
+  hosts: all
+  become: true
+  vars:
+    cron_jobs:
+      - name: "Daily Backup"
+        job: "0 0 * * * /bin/backup.sh"
+      - name: "Weekly Cleanup"
+        job: "0 0 * * 6 /bin/cleanup.sh"
+  tasks:
+    - name: Create backup script
+      copy:
+        src: backup.sh
+        dest: /bin/backup.sh
+        mode: 0755
+    - name: Create cleanup script
+      copy:
+        src: cleanup.sh
+        dest: /bin/cleanup.sh
+        mode: 0755
+    - name: Set up cron jobs
+      cron:
+        name: "{{ item.name }}"
+        job: "{{ item.job }}"
+      with_items: "{{ cron_jobs }}"
