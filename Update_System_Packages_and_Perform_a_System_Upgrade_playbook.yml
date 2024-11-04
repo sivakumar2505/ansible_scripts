@@ -1,27 +1,30 @@
 
 ---
-- hosts: all
+- name: Update and Upgrade System Packages
+  hosts: all
   become: true
   tasks:
     - name: Update system packages
       apt:
         update_cache: yes
-        cache_valid_time: 3600
-      register: update_result
+      when: ansible_os_family == "Debian"
 
-    - name: Check if any updates are available
-      debug:
-        msg: "System packages are up to date."
-      when: update_result is changed
+    - name: Update system packages
+      yum:
+        name: '*'
+        state: latest
+      when: ansible_os_family == "RedHat"
 
-    - name: Perform system upgrade
+    - name: Perform a system upgrade
       apt:
         upgrade: dist
         autoremove: yes
-        autoclean: yes
-      register: upgrade_result
+        autoupgrade: yes
+      when: ansible_os_family == "Debian"
 
-    - name: Check if system upgrade was successful
-      debug:
-        msg: "System upgrade completed successfully."
-      when: upgrade_result is changed
+    - name: Perform a system upgrade
+      yum:
+        name: '*'
+        state: latest
+        exclude: kernel*
+      when: ansible_os_family == "RedHat"
