@@ -1,17 +1,15 @@
+
 ---
-- name: Install Apache HTTP Server
-  hosts: all
+- hosts: all
   become: yes
-
   tasks:
-    - name: Update apt cache
-      apt: update_cache=yes cache_valid_time=3600
-
-    - name: Install Apache HTTP Server
-      apt: name=apache2 state=present
-
-    - name: Ensure Apache is enabled
-      service: name=apache2 enabled=yes
-
-    - name: Start Apache
-      service: name=apache2 state=started
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: latest
+    
+    - name: Enable Apache at boot
+      service:
+        name: apache2
+        enabled: yes
+        state: started
