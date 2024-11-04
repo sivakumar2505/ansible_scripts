@@ -1,24 +1,34 @@
 
 ---
-- name: Install Apache HTTP server on Ubuntu
+
+- name: Install Apache Web Server
   hosts: all
-  become: yes
+  become: true
   tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-    
     - name: Install Apache HTTP server
       apt:
         name: apache2
-        state: latest
-    
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
     - name: Ensure Apache is enabled
       service:
         name: apache2
         enabled: yes
-    
-    - name: Start Apache
-      service:
-        name: apache2
         state: started
+      when: ansible_os_family == "Debian"
+
+    - name: Install Apache HTTP server
+      yum:
+        name: httpd
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure Apache is enabled
+      service:
+        name: httpd
+        enabled: yes
+        state: started
+      when: ansible_os_family == "RedHat"
