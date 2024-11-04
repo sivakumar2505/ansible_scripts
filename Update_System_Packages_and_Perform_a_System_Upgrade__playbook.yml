@@ -1,24 +1,16 @@
+
 ---
-- hosts: all
-  gather_facts: false
-  become: true
+- name: Update System Packages and Perform a System Upgrade
+  hosts: all
+  become: yes
   tasks:
     - name: Update system packages
       apt:
         update_cache: yes
-        force_apt_get: yes
-      when: ansible_os_family == "Debian" # for Debian-based systems
-    - name: Update system packages
-      yum:
-        update_cache: yes
-      when: ansible_os_family == "RedHat" # for RedHat-based systems
-    - name: Perform system upgrade
-      apt:
         upgrade: dist
-        force_apt_get: yes
-      when: ansible_os_family == "Debian" # for Debian-based systems
-    - name: Perform system upgrade
-      yum:
-        name: "*"
-        state: latest
-      when: ansible_os_family == "RedHat" # for RedHat-based systems
+
+    - name: Reboot server if kernel is updated
+      shell: "test -f /var/run/reboot-required && shutdown -r now || true"
+      async: 0
+      poll: 0
+      ignore_errors: true
