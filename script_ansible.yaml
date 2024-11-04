@@ -1,55 +1,29 @@
 ---
-- name: Run tasks with user prompt on failure
+- name: Task that requires password authentication
   hosts: localhost
   gather_facts: no
-
   vars:
-    continue_on_failure: true  # Default variable to control task continuation on failures
+    password: "initial_password"  # Initial password (you can leave it blank if desired)
+    max_attempts: 3               # Maximum number of attempts to ask for a password
 
   tasks:
-    - name: Task 1 - Run some command
-      command: "some_command_1"
-      register: result
-      failed_when: result.rc != 0
-      when: continue_on_failure
-    - name: Check Task 1 result and prompt if failed
-      pause:
-        prompt: "Task 1 failed. Do you want to continue? (yes/no)"
-      when: result.failed and continue_on_failure
-      register: user_input_1
-    - name: Set continue_on_failure based on Task 1 input
-      set_fact:
-        continue_on_failure: "{{ user_input_1.user_input == 'yes' }}"
-      when: result.failed and continue_on_failure
+    - name: Attempt a password-protected command
+      command: "echo 'Simulated password-protected command'"
+      register: command_result
+      failed_when: "'Authentication failed' in command_result.stderr"
+      ignore_errors: yes
 
-    - name: Task 2 - Run another command
-      command: "some_command_2"
-      register: result
-      failed_when: result.rc != 0
-      when: continue_on_failure
-    - name: Check Task 2 result and prompt if failed
+    - name: Prompt for password if the initial attempt failed
       pause:
-        prompt: "Task 2 failed. Do you want to continue? (yes/no)"
-      when: result.failed and continue_on_failure
-      register: user_input_2
-    - name: Set continue_on_failure based on Task 2 input
-      set_fact:
-        continue_on_failure: "{{ user_input_2.user_input == 'yes' }}"
-      when: result.failed and continue_on_failure
+        prompt: "The password is incorrect. Please enter the correct password:"
+      register: user_input
+      when: command_result.failed
+      loop: "{{ range(1, max_attempts) | list }}"
+      until: not command_result.failed
+      retries: "{{ max_attempts }}"
+      delay: 0
 
-    - name: Task 3 - Run another command
-      command: "some_command_3"
-      register: result
-      failed_when: result.rc != 0
-      when: continue_on_failure
-    - name: Check Task 3 result and prompt if failed
-      pause:
-        prompt: "Task 3 failed. Do you want to continue? (yes/no)"
-      when: result.failed and continue_on_failure
-      register: user_input_3
-    - name: Set continue_on_failure based on Task 3 input
+      # This sets the password variable to the user's new input
       set_fact:
-        continue_on_failure: "{{ user_input_3.user_input == 'yes' }}"
-      when: result.failed and continue_on_failure
-
-    # Add more tasks as needed following the same pattern.
+        password: "{{ user_input.user_input }}"
+      when: command_result.failed
