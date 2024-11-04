@@ -2,26 +2,29 @@
 ---
 - name: Set Up Cron Jobs for Regular Maintenance
   hosts: all
-  become: true
-  vars:
-    cron_jobs:
-      - name: "Daily Backup"
-        job: "0 0 * * * /bin/backup.sh"
-      - name: "Weekly Cleanup"
-        job: "0 0 * * 6 /bin/cleanup.sh"
   tasks:
-    - name: Create backup script
-      copy:
-        src: backup.sh
-        dest: /bin/backup.sh
+    - name: Create cron job directory
+      file:
+        path: /etc/cron.d
+        state: directory
         mode: 0755
-    - name: Create cleanup script
+
+    - name: Create cron job file
       copy:
-        src: cleanup.sh
-        dest: /bin/cleanup.sh
+        dest: /etc/cron.d/maintenance
+        content: "0 0 * * * root /usr/bin/maintenance.sh"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Create maintenance script
+      copy:
+        dest: /usr/bin/maintenance.sh
+        content: |
+          #!/bin/bash
+          # Script for regular maintenance tasks
+          # Add tasks here
+          echo "Maintenance tasks completed"
+        owner: root
+        group: root
         mode: 0755
-    - name: Set up cron jobs
-      cron:
-        name: "{{ item.name }}"
-        job: "{{ item.job }}"
-      with_items: "{{ cron_jobs }}"
