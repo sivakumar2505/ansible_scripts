@@ -2,15 +2,19 @@
 ---
 - hosts: 3.87.87.185
   become: true
+  vars:
+    username: vigil
   tasks:
-    - name: Create username in machine
+    - name: Create username
       user:
-        name: "{{ default_username }}"
+        name: "{{ username }}"
         state: present
-      vars:
-        default_username: vigil
-      ignore_errors: yes
-      register: username_created
-    - debug:
-        msg: "Username {{ default_username }} created successfully"
-      when: username_created.changed == true
+        createhome: yes
+        shell: /bin/bash
+        update_password: on_create
+        password_lock: yes
+        groups: sudo
+      register: user_created
+    - name: Print username created
+      debug:
+        msg: "Username {{ username }} created successfully!"
