@@ -1,0 +1,17 @@
+---
+- name: Get disk status in Ubuntu
+  hosts: all
+  become: true
+  tasks:
+    - name: Check disk status
+      shell: df -h
+      register: disk_status
+      when: ansible_distribution == "Ubuntu"
+    - name: Print disk status
+      debug:
+        msg: "Disk status in Ubuntu: {{ disk_status.stdout_lines }}"
+      when: disk_status|success
+    - name: Fail if disk status not retrieved
+      fail:
+        msg: "Unable to get disk status in Ubuntu"
+      when: disk_status|failed
