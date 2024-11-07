@@ -1,0 +1,39 @@
+
+---
+- name: Install and Configure MYSQL Server in Ubuntu
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install MYSQL Server
+      apt:
+        name: mysql-server
+        state: present
+
+    - name: Start MYSQL service
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+    
+    - name: Configure MYSQL
+      mysql_db:
+        name: database_name
+        state: present
+        collation: utf8mb4_general_ci
+        encoding: utf8mb4
+
+    - name: Create MYSQL user
+      mysql_user:
+        name: user_name
+        password: password
+        priv: '*.*:ALL'
+        host: localhost
+        state: present
+    
+    - name: Grant privileges to user
+      mysql_user:
+        name: user_name
+        priv: 'database_name.*:ALL'
+        host: localhost
+        state: present
