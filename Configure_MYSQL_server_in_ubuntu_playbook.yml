@@ -1,38 +1,26 @@
 
 ---
-- name: Configure MYSQL server in Ubuntu
-  hosts: all
-  become: yes
-  vars:
-    mysql_root_password: "changeme" #change this to your desired root password
+- name: Install and configure MYSQL server in ubuntu
+  hosts: all  # Replace "all" with the name of your target hosts or group
+
   tasks:
     - name: Install MYSQL server
       apt:
         name: mysql-server
-        state: present
-    - name: Configure MYSQL root password
-      debconf:
-        name: 'mysql-server'
-        question: 'mysql-server/root_password'
-        value: '{{ mysql_root_password }}'
-        vtype: password
-    - name: Configure MYSQL root password (again)
-      debconf:
-        name: 'mysql-server'
-        question: 'mysql-server/root_password_again'
-        value: '{{ mysql_root_password }}'
-        vtype: password
-    - name: Restart MYSQL service
+        state: present  # Make sure the package is installed
+    
+    - name: Start MYSQL service
       service:
         name: mysql
-        state: restarted
-    - name: Create MYSQL database
-      mysql_db:
-        name: mydatabase #change this to your desired database name
-        state: present
-    - name: Create MYSQL user
+        state: started
+        enabled: yes  # Make sure the service is started on boot
+    
+    - name: Set MYSQL root password
       mysql_user:
-        name: myuser #change this to your desired username
-        password: "{{ mysql_root_password }}"
-        priv: '*.*:ALL'
+        name: root
+        password: "{{ mysql_root_password }}"  # Replace with your desired root password
         host: localhost
+        login_unix_socket: /var/run/mysqld/mysqld.sock  # Replace with the appropriate path for your system
+  
+  vars:
+    mysql_root_password: "mySecurePassword"  # Replace with your desired root password
