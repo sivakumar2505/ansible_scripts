@@ -1,0 +1,36 @@
+
+---
+- hosts: 3.87.87.185
+  become: true
+  vars:
+    username: testuser
+    groupname: testgroup
+  tasks:
+    - name: Check if group exists
+      command: getent group {{ groupname }}
+      register: group_check
+      ignore_errors: true
+      changed_when: false
+    - name: Add group if it doesn't exist
+      command: groupadd {{ groupname }}
+      when: group_check.rc != 0
+      register: group_add
+    - name: Check if user exists
+      command: getent passwd {{ username }}
+      register: user_check
+      ignore_errors: true
+      changed_when: false
+    - name: Add user if it doesn't exist
+      command: useradd -m -g {{ groupname }} {{ username }}
+      when: user_check.rc != 0
+      args:
+        creates: "/home/{{ username }}"
+      register: user_add
+    - name: Validate user and group
+      command: id {{ username }}
+      register: validation
+      when: group_add.changed or user_add.changed
+      changed_when: false
+    - name: Print validation result
+      debug:
+        msg: "{{
