@@ -1,41 +1,36 @@
+
 ---
 - name: Set Up Cron Jobs for Regular Maintenance
   hosts: all
-  become: true
-  vars:
-    cron_jobs:
-      - name: "Daily Backup"
-        job: "/path/to/backup_script.sh"
-        minute: "0"
-        hour: "0"
-        day: "*"
-        month: "*"
-        weekday: "*"
-      - name: "Weekly Cleanup"
-        job: "/path/to/cleanup_script.sh"
-        minute: "0"
-        hour: "0"
-        day: "7"
-        month: "*"
-        weekday: "*"
+  become: yes
+  
   tasks:
-    - name: Install Cron Package
-      apt:
-        name: cron
-        state: present
-    - name: Copy Backup Script
-      copy:
-        src: backup_script.sh
-        dest: /path/to/backup_script.sh
-        mode: 0755
-    - name: Copy Cleanup Script
-      copy:
-        src: cleanup_script.sh
-        dest: /path/to/cleanup_script.sh
-        mode: 0755
-    - name: Add Cron Jobs
+    - name: Create a cron job for regular maintenance
       cron:
-        name: "{{ item.name }}"
-        job: "{{ item.job }}"
-        minute: "{{ item.minute }}"
-        hour: "{{ item.hour
+        name: Regular Maintenance
+        minute: "0"
+        hour: "0"
+        job: "maintenance_script.sh"
+        state: present
+    
+    - name: Copy maintenance script to remote server
+      copy:
+        src: maintenance_script.sh
+        dest: /home/user/maintenance_script.sh
+        mode: 0755
+    
+    - name: Create a log directory
+      file:
+        path: /var/log/maintenance
+        state: directory
+    
+    - name: Add log rotation for maintenance logs
+      copy:
+        src: logrotate.conf
+        dest: /etc/logrotate.d/maintenance
+        mode: 0644
+    
+    - name: Restart cron service
+      service:
+        name: cron
+        state: restarted
