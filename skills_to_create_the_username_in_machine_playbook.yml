@@ -1,34 +1,16 @@
 
 ---
 - hosts: 3.87.87.185
-  vars:
-    default_username: vigil
+  become: true
   tasks:
-    - name: Check if default username already exists
-      shell: cat /etc/passwd | grep "{{ default_username }}"
-      register: username_check
-      ignore_errors: true
-
-    - name: Create new username
-      when: username_check.rc != 0
-      shell: useradd {{ default_username }}
-
-    - name: Set password for new username
-      when: username_check.rc != 0
-      shell: echo "{{ default_username }}:{{ default_username }}" | chpasswd
-      register: password_set
-
-    - name: Check if password was set successfully
-      when: username_check.rc != 0
-      shell: cat /etc/shadow | grep "{{ default_username }}"
-      register: password_check
-
-    - name: Print success message
-      when: password_check.rc == 0
-      debug:
-        msg: "Successfully created username {{ default_username }} and set password to {{ default_username }}."
-
-    - name: Print error message if username already exists
-      when: username_check.rc == 0
-      debug:
-        msg: "Username {{ default_username }} already exists. Please choose a different
+    - name: Create username in machine
+      user:
+        name: "{{ default_username }}"
+        state: present
+      vars:
+        default_username: vigil
+      ignore_errors: yes
+      register: username_created
+    - debug:
+        msg: "Username {{ default_username }} created successfully"
+      when: username_created.changed == true
