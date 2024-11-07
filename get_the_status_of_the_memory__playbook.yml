@@ -1,0 +1,13 @@
+
+---
+- name: Get Memory Status
+  hosts: ubuntu
+  become: true
+  tasks:
+    - name: Get Memory Status
+      shell: free -m
+      register: memory_status
+      
+    - name: Print Memory Status
+      debug:
+        msg: "{{ memory_status.stdout_lines }}"
