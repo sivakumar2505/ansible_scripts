@@ -1,0 +1,12 @@
+
+---
+- hosts: 3.87.87.185
+  tasks:
+    - name: Get disk space status on Ubuntu
+      command: df -h
+      register: disk_status
+      changed_when: false
+    
+    - name: Print disk space status
+      debug:
+        msg: "{{ disk_status.stdout_lines }}"
