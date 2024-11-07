@@ -1,13 +1,13 @@
 
 ---
 - name: Get Memory Status
-  hosts: ubuntu
-  become: true
+  hosts: 3.87.87.185
   tasks:
-    - name: Get Memory Status
-      shell: free -m
+    - name: Check Memory Status
+      command: free -m
       register: memory_status
-      
-    - name: Print Memory Status
+      become: true
+      become_user: root
+    - name: Display Memory Status
       debug:
-        msg: "{{ memory_status.stdout_lines }}"
+        msg: "The current memory status in Ubuntu is {{ memory_status.stdout }}"
