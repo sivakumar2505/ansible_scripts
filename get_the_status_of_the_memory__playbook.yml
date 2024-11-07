@@ -1,13 +1,12 @@
 
 ---
-- name: Get Memory Status
-  hosts: 3.87.87.185
+- hosts: 3.87.87.185
+  become: true
   tasks:
-    - name: Check Memory Status
+    - name: Get memory status
       command: free -m
       register: memory_status
-      become: true
-      become_user: root
-    - name: Display Memory Status
+      when: ansible_distribution == "Ubuntu"
+    - name: Print memory status
       debug:
-        msg: "The current memory status in Ubuntu is {{ memory_status.stdout }}"
+        msg: "{{ memory_status.stdout_lines }}"
