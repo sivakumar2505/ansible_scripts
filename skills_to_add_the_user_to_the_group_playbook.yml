@@ -9,28 +9,30 @@
     - name: Check if group exists
       command: getent group {{ groupname }}
       register: group_check
-      ignore_errors: true
+      ignore_errors: yes
       changed_when: false
-    - name: Add group if it doesn't exist
+      failed_when: false
+
+    - name: Create group if it doesn't exist
       command: groupadd {{ groupname }}
       when: group_check.rc != 0
-      register: group_add
+
     - name: Check if user exists
       command: getent passwd {{ username }}
       register: user_check
-      ignore_errors: true
+      ignore_errors: yes
       changed_when: false
-    - name: Add user if it doesn't exist
-      command: useradd -m -g {{ groupname }} {{ username }}
+      failed_when: false
+
+    - name: Create user if it doesn't exist
+      command: useradd {{ username }}
       when: user_check.rc != 0
-      args:
-        creates: "/home/{{ username }}"
-      register: user_add
-    - name: Validate user and group
-      command: id {{ username }}
-      register: validation
-      when: group_add.changed or user_add.changed
-      changed_when: false
-    - name: Print validation result
-      debug:
-        msg: "{{
+
+    - name: Add user to group
+      user:
+        name: {{ username }}
+        groups: {{ groupname }}
+        append: yes
+      when: user_check.rc == 0 and group_check.rc == 0
+      become: true
+      become_user: ubuntu
