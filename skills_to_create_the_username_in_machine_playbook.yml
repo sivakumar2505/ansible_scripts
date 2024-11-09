@@ -1,20 +1,32 @@
 
 ---
-- hosts: 3.87.87.185
-  become: true
-  vars:
-    username: vigil
+- name: Create username in Ubuntu machine
+  hosts: 3.87.87.185
+  become: yes
+
   tasks:
-    - name: Create username
+    - name: Create user with username
       user:
-        name: "{{ username }}"
+        name: skills_to_create_the_username_in_machine
         state: present
-        createhome: yes
         shell: /bin/bash
-        update_password: on_create
-        password_lock: yes
-        groups: sudo
-      register: user_created
-    - name: Print username created
-      debug:
-        msg: "Username {{ username }} created successfully!"
+
+    - name: Set password for the user
+      ansible.builtin.shell: |
+        echo "skills_to_create_the_username_in_machine:password" | chpasswd
+
+    - name: Add user to sudoers
+      ansible.builtin.lineinfile:
+        dest: /etc/sudoers
+        regexp: '^skills_to_create_the_username_in_machine'
+        line: 'skills_to_create_the_username_in_machine ALL=(ALL) NOPASSWD:ALL'
+        state: present
+        validate: /usr/sbin/visudo -cf %s
+
+    - name: Create home directory for the user
+      ansible.builtin.file:
+        path: /home/skills_to_create_the_username_in_machine
+        state: directory
+        owner: skills_to_create_the_username_in_machine
+        group: skills_to_create_the_username_in_machine
+        mode: '0755'
