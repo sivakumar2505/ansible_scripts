@@ -1,0 +1,13 @@
+
+---
+- name: Run command df -h on Ubuntu
+  hosts: 3.87.87.185
+  become: true
+  tasks:
+    - name: Check disk usage
+      command: df -h
+      register: df_output
+    - name: Print disk usage
+      debug:
+        msg: "{{ df_output.stdout_lines }}"
+      when: df_output.rc == 0
