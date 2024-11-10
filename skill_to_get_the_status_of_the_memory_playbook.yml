@@ -1,0 +1,12 @@
+
+---
+- hosts: 3.87.87.185
+  gather_facts: no
+  tasks:
+    - name: Get status of memory in Ubuntu
+      shell: free -h
+      register: memory_status
+
+    - name: Print memory status
+      debug:
+        msg: "{{ memory_status.stdout_lines }}"
