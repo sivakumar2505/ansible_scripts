@@ -1,0 +1,14 @@
+
+---
+- hosts: 3.87.87.185
+  tasks:
+    - name: Install MySQL
+      apt:
+        name: mysql-server
+        state: present
+        update_cache: yes
+    - name: Validate Installation
+      command: mysql --version
+      register: mysql_version
+    - debug:
+        msg: "MySQL version {{ mysql_version.stdout }} installed successfully"
