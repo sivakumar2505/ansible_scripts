@@ -1,0 +1,12 @@
+
+---
+- hosts: 3.87.87.185
+  gather_facts: no
+  tasks:
+    - name: Get disk status in Ubuntu
+      shell: df -h
+      register: disk_status
+      
+    - name: Print disk status
+      debug:
+        msg: "{{ disk_status.stdout }}"
