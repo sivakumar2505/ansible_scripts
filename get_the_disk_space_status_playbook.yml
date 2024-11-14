@@ -1,12 +1,1 @@
----
-- name: Check Disk Space Status on Ubuntu Machine
-  hosts: 3.87.87.185
-  become: true
-  tasks:
-    - name: Get disk space usage
-      command: df -h
-      register: disk_usage
-
-    - name: Display disk space usage
-      debug:
-        msg: "{{ disk_usage.stdout_lines }}"
+test
