@@ -1,18 +1,31 @@
-
 ---
-- name: Update and Upgrade System Packages
-  hosts: all
-  gather_facts: false
 
+- name: Update System Packages and Perform a System Upgrade
+  hosts: all
+  become: true
   tasks:
     - name: Update system packages
-      apt:
-        name: "*"
+      yum:
+        name: '*'
         state: latest
+      when: ansible_os_family == "RedHat" or ansible_os_family == "SUSE"
+
+    - name: Update system packages
+      apt:
+        upgrade: yes
         update_cache: yes
+      when: ansible_os_family == "Debian" or ansible_os_family == "Ubuntu"
+
+    - name: Perform system upgrade
+      yum:
+        name: '*'
+        state: latest
+        exclude: kernel*
+      when: ansible_os_family == "RedHat" or ansible_os_family == "SUSE"
 
     - name: Perform system upgrade
       apt:
-        upgrade: yes
+        upgrade: dist
         autoremove: yes
         autoclean: yes
+      when: ansible_os_family == "Debian" or ansible_os_family == "Ubuntu"
