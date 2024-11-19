@@ -1,0 +1,149 @@
+   From: 
+     To: 
+   Date: 10/1/2024 9:48:30 AM
+Subject: HCL Customer Group Inc | Business Impacting Major Alert 11 | Multiple URLs and VM are inaccessible in EUS2 azure region | INC4643271/ SF 05230980
+Attachments: image001.png (495)
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+CED Status
+Green
+	 
+Issue Description
+Multiple URLs and VM's are currently down in the EUS2 Azure region
+	 
+Current Status
+Respective Application team is currently in the process of validating the application services
+	 
+Business Impact
+Impacted customer list can be accessed via below link
+Impacted Customer List:  Potential business impact major - HCL customer Group Inc - 20th Sep 2024.xlsm <https://jda365.sharepoint.com/:x:/s/O365-SaaS24x7CollaborationSpace/EQI5bPfLHPZClFV5U6oa4UEBcQtpe2co-lCFiSMsxcfPHA?e=r3zWGK> 
+	 
+Technical Update
+• All PROD servers have been rebooted.
+• The respective Application teams are currently validating the application services.
+• The reboot process for Non-PROD servers is ongoing.
+	 
+Next Plan of Actions
+• Next alert will send once we have adequate information to share.
+	 
+TAM/ PM
+Manjunath Horalalli
+Primary Resolver Group
+Windows Team
+	 
+Datacenter
+EUS2
+	 
+Teams Engaged
+Windows | Azure | TMS Tech | IM | Monitoring | Splunk | SolarWinds | Storage
+	 
+Meeting Link
+https://teams.microsoft.com/l/meetup-join/19%3ameeting_MTIxZDMzODktMGNlNC00YzcyLWI0NzMtMmI2YmQzMTQ1NmVm%40thread.v2/0?context=%7b%22Tid%22%3a%222ac36cee-0617-4ac0-bebf-e1ce5dfab86c%22%2c%22Oid%22%3a%226f6f7e97-2cd5-4512-a37a-f616e7848d8b%22%7d
+	 
+MS Teams Thread
+https://teams.microsoft.com/l/message/19:9e31d0d99de84247a88f23abbf6d276f@thread.skype/1726813046995?tenantId=2ac36cee-0617-4ac0-bebf-e1ce5dfab86c&groupId=2ae66b2c-4841-4378-8dd7-42bb736c8bf2&parentMessageId=1726813046995&teamName=_SaaS%2024x7%20Collaboration%20Space&channelName=2.Major%20Incidents&createdTime=1726813046995
+	 
+ 
+	 
+Entitlement
+Cloud/ SAAS/ Support 
+Case Created (IST)
+2024-09-20 11:49 AM IST
+	 
+Practice
+Infra
+Impact Confirmed at (IST)
+2024-09-20 11:55 AM IST
+	 
+Incident Source
+Internal
+Case Resolved (IST)
+Date/Month/Year HH:MM AM/PM | Outage Duration (In Mins) : TBD
+	 
+Proactive Customer Notification (NA/Issued)
+Issued 
+Case Status
+Work In Progress
+	 
+Affected CI
+To be filled
+Resolution SLA
+Breached 
+	 
+Problem Case
+To be filled
+Monitoring Effectiveness
+To be filled
+	 
+ 
+	 
+		
+Previous Updates
+		
+Update 10:
+• The issue stems from a Microsoft-pushed extension causing problems, awaiting further updates from Microsoft. These extensions serve functions like monitoring and replication, with some managed by Microsoft at the fabric level. 
+• The team needs to scan around 16,000 to 17,000 VMs to identify the problematic extensions and is requesting a script from Microsoft for help. However, this won't fix machines already down, which were removed from the domain after a reboot. The priority is to prevent new machines from facing this issue
+• The team has successfully tested removing the extension and rebooting VMs.
+
+Update 9:
+•.The Windows team is manually restoring the affected servers, with 76 PROD servers are rebooted so far and validations currently underway.
+• Windows team, in collaboration with the Microsoft team, is actively working to resolve the issues
+
+Update 8:
+•.The Windows team is manually restoring the affected servers, with 52 servers rebooted so far and validations currently underway.
+• Windows team, in collaboration with the Microsoft team, is actively working to resolve the issues
+
+Update 7:
+•.Windows team is manually restoring the affected servers.
+• Windows team, in collaboration with the Microsoft team, is actively working to resolve the issues
+
+Update 6:
+•. As recommended by Microsoft, the Windows team is manually restoring the affected servers. 
+• The latest count of impacted servers is 97 in production, with 15 servers fully restored.
+• Team is discussing the need to prioritize certain servers due to a high volume of requests.
+• Required Infra teams are currently on a Bridge call with Microsoft, working to restore services.
+
+Update 5:
+• Microsoft has confirmed that manually restoring the servers is our only option at this time. They have not yet confirmed the root cause or any further details.
+• Windows team informed there is some problem with server connectivity and IP address translation.
+• Windows team informed after disabling the firewall, few servers came up.
+• Required Infra teams are currently on a Bridge call with Microsoft, working to restore services.
+
+Update4:
+• Windows Team is working manually to restore the services, the team is focusing on critical ones to be done first. Microsoft has not been able to determine the cause and unable to confirm on how to contain the current situation from affecting other servers in the region.
+• Most of the Infra teams have validated where their cores servers are up and running in EUS2.
+• Required Infra teams are currently on a Bridge call with Microsoft, working to restore services
+
+Update 3(2024-09-20 13:04 PM IST)
+• Microsoft has confirmed that they’re receiving reports of issues from the East US region and other areas as well. 
+• The network team has verified that the recent change (CHG0152114) isn’t related, it was just to allow access for MTF URLs from Zabbix and the EUS2 Romi server on the specified port.
+• We can now access the server for ABC Food Corp and are receiving DNS updates automatically. The teams have completed work on one server and are still working on the others.
+• The Microsoft team has told us that they are currently focused on reversing the changes and will need some time to figure out the root cause of the issue.
+• The teams have asked the monitoring team to focus on other areas and servers and to let them know if the number of affected servers increases.
+
+Update 2(2024-09-20 12:29 PM IST)
+• Multiple servers in the EUS2 region have been rebooted. The main issue is that DNS entries for several servers have been deleted, preventing them from logging in successfully.
+• The Windows team has raised a case to Microsoft (2409200030003746) and is working with them to resolve the issue.
+• The teams were focused on identifying the specific customers and services impacted by the DNS issue. Meanwhile, the technical teams were actively troubleshooting, working on restoring DNS entries and investigating the cause of the server reboots.
+• All required teams are currently on an internal call, working to restore services.
+
+Update 1(2024-09-20 12:02 PM IST)
+• Initial investigation is being carried out by Cloud technical teams
+• Details about the investigation will be shared in our subsequent alerts
+		
+Recipients: MIM - Major Incident MIM-MajorIncident@hclcustomer.com <mailto:MIM-MajorIncident@blueyonder.com> ; CS-BY Commerce-IM Notification cs-bycommerce-imnotification@hclcustomer.com <mailto:cs-bycommerce-imnotification@blueyonder.com> ; CS-Luminate Planning-IM Notification dst-cs-luminateplanning-imnotification@hclcustomer.com <mailto:dst-cs-luminateplanning-imnotification@blueyonder.com> ; CS-LCT-IM Notification cs-lct-im-notification@hclcustomer.com <mailto:cs-lct-im-notification@blueyonder.com> ; CS-VA-IM Notification cs-va-imnotification@hclcustomer.com <mailto:cs-va-imnotification@blueyonder.com> ; CS-RPL-IM Notification cs-rp-imnotification@hclcustomer.com <mailto:cs-rp-imnotification@blueyonder.com> ; RP-RPS-BOS-Team RP-RPS-BOS-Team@hclcustomer.com <mailto:RP-RPS-BOS-Team@blueyonder.com> ; CX-WGS-Leadership dst-cx-va-leadership@hclcustomer.com <mailto:dst-cx-va-leadership@blueyonder.com> ; BY-WFM-Loblaw-Support by-wfm-loblaw-support@hclcustomer.com <mailto:by-wfm-loblaw-support@blueyonder.com> ; Loblaws-support loblaws-support@hclcustomer.com <mailto:loblaws-support@blueyonder.com> ; LCL-TMS-APS lcl-tms-aps@hclcustomer.com <mailto:lcl-tms-aps@blueyonder.com> ; WGS-TMS-SM wgs-tms-sm@hclcustomer.com <mailto:wgs-tms-sm@blueyonder.com> ; BY-WFM-Loblaw-Support by-wfm-loblaw-support@hclcustomer.com <mailto:by-wfm-loblaw-support@blueyonder.com> ; Loblaws-support loblaws-support@hclcustomer.com <mailto:loblaws-support@blueyonder.com> ; CS-PG-Focused-Team cs-pg-focused-team@hclcustomer.com <mailto:cs-pg-focused-team@blueyonder.com> ; WGS-TMS-Support wgs-tms-support@hclcustomer.com <mailto:wgs-tms-support@blueyonder.com> ; WGS-TMS-SM wgs-tms-sm@hclcustomer.com <mailto:wgs-tms-sm@blueyonder.com> ; BY-ESO-BP-Support by-eso-bp-support@hclcustomer.com <mailto:by-eso-bp-support@blueyonder.com> ; Luminate Planning India L2 and L3 luminateplanningindial2andl3@hclcustomer.com <mailto:luminateplanningindial2andl3@blueyonder.com> ; CS-LCT-Global-Support cs-lct-global-support@hclcustomer.com <mailto:cs-lct-global-support@blueyonder.com> ; CS-Platform Services-IM Notification dst-cs-platformservices-imnotification@hclcustomer.com <mailto:dst-cs-platformservices-imnotification@blueyonder.com> ; BYConnectOperate dst-byconnectoperate@hclcustomer.com <mailto:dst-byconnectoperate@blueyonder.com> ; PDC2023_PDSupport dst-dms2pdoperate@hclcustomer.com <mailto:dst-dms2pdoperate@blueyonder.com> ; BY-nexus-leads by-nexus-leads@hclcustomer.com <mailto:by-nexus-leads@blueyonder.com> ; CS-Infra-IRE cs-infra-ire@hclcustomer.com <mailto:cs-infra-ire@blueyonder.com> ; TAM-GLOBAL TAM-GLOBAL@hclcustomer.com <mailto:TAM-GLOBAL@blueyonder.com> ; CS-TMS-AppSupport cs-tms-appsupport@hclcustomer.com <mailto:cs-tms-appsupport@blueyonder.com> ; CS-Trans-Tech-Team CS-Trans-Tech-Team@hclcustomer.com <mailto:CS-Trans-Tech-Team@blueyonder.com> ; CSintxappteam CSintxappteam@hclcustomer.com <mailto:CSintxappteam@blueyonder.com> ; ISS-WFMR ISS-WFMR@hclcustomer.com <mailto:ISS-WFMR@blueyonder.com> ; CS-WMS-Dispatcher CS-WMS-Dispatcher@hclcustomer.com <mailto:CS-WMS-Dispatcher@blueyonder.com> ; EDITeam editeam@hclcustomer.com <mailto:editeam@blueyonder.com> ; CS-Alloc-App-Team csallocappteam@hclcustomer.com <mailto:csallocappteam@blueyonder.com> ; CS-SS-App-Team csssappteam@hclcustomer.com <mailto:csssappteam@blueyonder.com> ; CS-Assort-App-Team csassortappteam@hclcustomer.com <mailto:csassortappteam@blueyonder.com> ; CS-SCPO-App-Team csscpoappteam@hclcustomer.com <mailto:csscpoappteam@blueyonder.com> ; CS-MPL-App-Team CS-MPL-App-Team@hclcustomer.com <mailto:CS-MPL-App-Team@blueyonder.com> ; CS-ESP CS-ESP@hclcustomer.com <mailto:CS-ESP@blueyonder.com> ; RP-RPS-Hosting-App-Info RP-RPS-Hosting-App-Info@hclcustomer.com <mailto:RP-RPS-Hosting-App-Info@blueyonder.com> ; NEXUS-INFRA-LEADS nexus-infra-leads@hclcustomer.com <mailto:nexus-infra-leads@blueyonder.com> ; CS-DBA-SQL cs-dba-sql@hclcustomer.com <mailto:cs-dba-sql@blueyonder.com> ; MSWindowsServerSupport MSWindowsServerSupport@hclcustomer.com <mailto:MSWindowsServerSupport@blueyonder.com> ; cs-dba-oracle cs-dba-oracle@hclcustomer.com <mailto:cs-dba-oracle@blueyonder.com> ; CS-Infra-Support-Citrix CS-Infra-Support-Citrix@hclcustomer.com <mailto:CS-Infra-Support-Citrix@blueyonder.com> ; CS-Infra-Support-Vmware CS-Infra-Support-Vmware@hclcustomer.com <mailto:CS-Infra-Support-Vmware@blueyonder.com> ; csssoadmin csssoadmin@hclcustomer.com <mailto:csssoadmin@blueyonder.com> ; CSStorage CSStorage@hclcustomer.com <mailto:CSStorage@blueyonder.com> ; CS-NetworkOperations cs-networkoperations@hclcustomer.com <mailto:cs-networkoperations@blueyonder.com> ; Commerce India Commerce-India@hclcustomer.com <mailto:Commerce-India@blueyonder.com> ; yantriks-saas-support yantriks-saas-support@hclcustomer.com <mailto:yantriks-saas-support@blueyonder.com> ; CS-MMS-App-Team csmmsappteam@hclcustomer.com <mailto:csmmsappteam@blueyonder.com> ; CS-PMM-App-Team cspmmappteam@hclcustomer.com <mailto:cspmmappteam@blueyonder.com> ; CS-EP-App-Team csepappteam@hclcustomer.com <mailto:csepappteam@blueyonder.com> ; CS-MFT CS-MFT@hclcustomer.com <mailto:CS-MFT@blueyonder.com> ; CSMonitoring CSMonitoring@hclcustomer.com <mailto:CSMonitoring@blueyonder.com> 
+		
+						 
+						 
+ 
+ 
+Regards,
+ 
+Siddhant Agrawal
+Incident Lead | Service Management/SIAM
+ 
+24x7 Teams Channel for S1s (link <https://teams.microsoft.com/l/team/19%3a0a43a76a78eb4141b86b3bf373a67fca%40thread.skype/conversations?groupId=2ae66b2c-4841-4378-8dd7-42bb736c8bf2&tenantId=2ac36cee-0617-4ac0-bebf-e1ce5dfab86c> )
+Escalation Matrix (Link <https://blueyonder.service-now.com/ssp?id=by_escalation_matrix> )
+Onestop Shop Sharepoint (link <https://jda365.sharepoint.com/sites/ITServiceManagement/Service%20Now%20Transformation/Forms/AllItems.aspx?FolderCTID=0x0120008DB2D915840C434E93C7886C02CA2978&viewid=fb996780-518b-4495-b897-12d9bad17da8&OR=Teams-HL&CT=1706543880412> )
+ 
+
