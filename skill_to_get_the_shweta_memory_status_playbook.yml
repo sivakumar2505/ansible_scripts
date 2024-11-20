@@ -1,0 +1,13 @@
+---
+- name: Get Memory Status on Ubuntu Machine
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Check free memory
+      ansible.builtin.command:
+        cmd: free -h
+      register: memory_status
+
+    - name: Display Memory Status
+      ansible.builtin.debug:
+        var: memory_status.stdout_lines
