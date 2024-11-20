@@ -1,0 +1,15 @@
+- name: Check service status and display message
+  hosts: all
+  tasks:
+    - name: Check the status of a service
+      ansible.builtin.service_facts:
+
+    - name: Verify if the service is running
+      ansible.builtin.debug:
+        msg: >
+          The service {{ service_name }} is 
+          {% if ansible_facts.services[service_name].state == 'running' %} running 
+          {% elif ansible_facts.services[service_name].state == 'stopped' %} stopped 
+          {% else %} in an unknown state {% endif %}.
+      vars:
+        service_name: apache2
